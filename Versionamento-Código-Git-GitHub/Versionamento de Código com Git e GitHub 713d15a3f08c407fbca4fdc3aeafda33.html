@@ -1,0 +1,693 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Versionamento de Código com Git e GitHub</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="713d15a3-f08c-407f-bca4-fdc3aeafda33" class="page sans"><header><img class="page-cover-image" src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon" src="https://www.notion.so/icons/preview_purple.svg"/></div><h1 class="page-title"><strong><strong>Versionamento de Código com Git e GitHub</strong></strong></h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>Categoria</th><td><span class="selected-value select-value-color-pink">Curso</span></td></tr><tr class="property-row property-row-relation"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesRelation"><path d="M13.1475 10.5869V3.72363C13.1475 3.25195 12.833 2.93066 12.3477 2.93066H5.48438C5.02637 2.93066 4.70508 3.27246 4.70508 3.67578C4.70508 4.07227 5.05371 4.40039 5.46387 4.40039H7.89746L10.8438 4.30469L9.59961 5.39844L3.08496 11.9199C2.92773 12.0771 2.8457 12.2686 2.8457 12.46C2.8457 12.8564 3.20801 13.2256 3.61816 13.2256C3.80957 13.2256 3.99414 13.1504 4.15137 12.9932L10.6729 6.47168L11.7803 5.22754L11.6641 8.05762V10.6074C11.6641 11.0176 11.9922 11.373 12.4023 11.373C12.8057 11.373 13.1475 11.0312 13.1475 10.5869Z"></path></svg></span>Conteúdo</th><td><a href="https://www.notion.so/GIT-6ea1fc521b2949878d47090b349a07c6?pvs=21"><img class="icon" src="https://www.notion.so/icons/git_orange.svg"/>GIT</a></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesDate"><path d="M3.29688 14.4561H12.7031C14.1797 14.4561 14.9453 13.6904 14.9453 12.2344V3.91504C14.9453 2.45215 14.1797 1.69336 12.7031 1.69336H3.29688C1.82031 1.69336 1.05469 2.45215 1.05469 3.91504V12.2344C1.05469 13.6973 1.82031 14.4561 3.29688 14.4561ZM3.27637 13.1162C2.70898 13.1162 2.39453 12.8154 2.39453 12.2207V5.9043C2.39453 5.30273 2.70898 5.00879 3.27637 5.00879H12.71C13.2842 5.00879 13.6055 5.30273 13.6055 5.9043V12.2207C13.6055 12.8154 13.2842 13.1162 12.71 13.1162H3.27637ZM6.68066 7.38086H7.08398C7.33008 7.38086 7.41211 7.30566 7.41211 7.05957V6.66309C7.41211 6.41699 7.33008 6.3418 7.08398 6.3418H6.68066C6.44141 6.3418 6.35938 6.41699 6.35938 6.66309V7.05957C6.35938 7.30566 6.44141 7.38086 6.68066 7.38086ZM8.92285 7.38086H9.31934C9.56543 7.38086 9.64746 7.30566 9.64746 7.05957V6.66309C9.64746 6.41699 9.56543 6.3418 9.31934 6.3418H8.92285C8.67676 6.3418 8.59473 6.41699 8.59473 6.66309V7.05957C8.59473 7.30566 8.67676 7.38086 8.92285 7.38086ZM11.1582 7.38086H11.5547C11.8008 7.38086 11.8828 7.30566 11.8828 7.05957V6.66309C11.8828 6.41699 11.8008 6.3418 11.5547 6.3418H11.1582C10.9121 6.3418 10.8301 6.41699 10.8301 6.66309V7.05957C10.8301 7.30566 10.9121 7.38086 11.1582 7.38086ZM4.44531 9.58203H4.84863C5.09473 9.58203 5.17676 9.50684 5.17676 9.26074V8.86426C5.17676 8.61816 5.09473 8.54297 4.84863 8.54297H4.44531C4.20605 8.54297 4.12402 8.61816 4.12402 8.86426V9.26074C4.12402 9.50684 4.20605 9.58203 4.44531 9.58203ZM6.68066 9.58203H7.08398C7.33008 9.58203 7.41211 9.50684 7.41211 9.26074V8.86426C7.41211 8.61816 7.33008 8.54297 7.08398 8.54297H6.68066C6.44141 8.54297 6.35938 8.61816 6.35938 8.86426V9.26074C6.35938 9.50684 6.44141 9.58203 6.68066 9.58203ZM8.92285 9.58203H9.31934C9.56543 9.58203 9.64746 9.50684 9.64746 9.26074V8.86426C9.64746 8.61816 9.56543 8.54297 9.31934 8.54297H8.92285C8.67676 8.54297 8.59473 8.61816 8.59473 8.86426V9.26074C8.59473 9.50684 8.67676 9.58203 8.92285 9.58203ZM11.1582 9.58203H11.5547C11.8008 9.58203 11.8828 9.50684 11.8828 9.26074V8.86426C11.8828 8.61816 11.8008 8.54297 11.5547 8.54297H11.1582C10.9121 8.54297 10.8301 8.61816 10.8301 8.86426V9.26074C10.8301 9.50684 10.9121 9.58203 11.1582 9.58203ZM4.44531 11.7832H4.84863C5.09473 11.7832 5.17676 11.708 5.17676 11.4619V11.0654C5.17676 10.8193 5.09473 10.7441 4.84863 10.7441H4.44531C4.20605 10.7441 4.12402 10.8193 4.12402 11.0654V11.4619C4.12402 11.708 4.20605 11.7832 4.44531 11.7832ZM6.68066 11.7832H7.08398C7.33008 11.7832 7.41211 11.708 7.41211 11.4619V11.0654C7.41211 10.8193 7.33008 10.7441 7.08398 10.7441H6.68066C6.44141 10.7441 6.35938 10.8193 6.35938 11.0654V11.4619C6.35938 11.708 6.44141 11.7832 6.68066 11.7832ZM8.92285 11.7832H9.31934C9.56543 11.7832 9.64746 11.708 9.64746 11.4619V11.0654C9.64746 10.8193 9.56543 10.7441 9.31934 10.7441H8.92285C8.67676 10.7441 8.59473 10.8193 8.59473 11.0654V11.4619C8.59473 11.708 8.67676 11.7832 8.92285 11.7832Z"></path></svg></span>Data</th><td><time>@31/10/2023</time></td></tr><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Done</span></td></tr></tbody></table></header><div class="page-body"><h2 id="baeba8c0-eb06-47a6-a5db-d5cc53dbdc78" class=""><mark class="highlight-pink">O que é versionamento de código.</mark></h2><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="08dac149-26a1-4961-9a79-80dd5853604d"><div style="font-size:1.5em"><img class="icon" src="https://www.notion.so/icons/push-pin_purple.svg"/></div><div style="width:100%">Controlam as versões de arquivos ao longo do tempo.</div></figure><p id="24a7c282-2299-42e8-bc43-19d9a6f16397" class="">Existem dois tipos de sistemas de controle de versão, <mark class="highlight-purple">centralizados</mark> e <mark class="highlight-purple">distribuídos.</mark></p><p id="2ad0e0b6-1a74-4212-b449-85b1a0e7d160" class="">Os centralizados possuem um único servidor onde esse possui todas as informações referentes ao projeto. </p><p id="1311e291-6064-425d-bb3a-eee76489b65b" class="">Já os distribuídos possuem uma cópia do servidor principal , onde essas cópias são distribuídas para cada usuário envolvido do sistema.  </p><h2 id="360843ae-d4a0-4185-a684-feb8281054cc" class=""><mark class="highlight-pink">Fluxo Básico no Git</mark></h2><p id="3fa816fd-8891-49ed-9726-6da1231f6291" class="">A ferramenta Git é bastante abrangente , e para isso é preciso sempre consultar a documentação no próprio site do Git, através desse do link :</p><figure id="f64bd0ff-408d-4546-bc60-dc271a8f8e82"><a href="https://git-scm.com/" class="block-color-purple_background bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Git</div><div class="bookmark-description">Git is a free and open source
+        distributed version control system designed to handle everything from small to
+        very large projects with speed and efficiency.</div></div><div class="bookmark-href"><img src="https://git-scm.com/favicon.ico" class="icon bookmark-icon"/>https://git-scm.com/</div></div></a></figure><p id="807f2a3c-80d6-49ff-a8b7-d3a36acd1e69" class="">Aqui estão alguns comando básicos do Git.</p><ul id="69074288-24fe-4269-b746-8132afb914d2" class="block-color-purple_background toggle"><li><details open=""><summary>Clonar repositório </summary><hr id="402e4a84-886c-4b00-a14e-bcc4f7b5d68c"/><ul id="033745ff-6802-4ac5-8477-daac362c56b7" class="bulleted-list"><li style="list-style-type:disc">Git clone</li></ul></details></li></ul><ul id="15a3a06e-d154-4148-b929-b1f1daeaf5ac" class="block-color-purple_background toggle"><li><details open=""><summary>Gravar alterações</summary><hr id="a49cf952-9ef5-4c05-8da4-feb72f8dcff6"/><ul id="54c02f32-62c5-4859-b823-e29d746eb868" class="bulleted-list"><li style="list-style-type:disc">Git commit</li></ul></details></li></ul><ul id="50485f9d-ffed-4af5-8693-d493ef683fd9" class="block-color-purple_background toggle"><li><details open=""><summary>Puxar alterações do repositório</summary><hr id="ef7d3a48-71f0-4542-82d6-0624ee8721b3"/><ul id="ff7b5ee8-8a26-4ff8-b898-8b518012bdff" class="bulleted-list"><li style="list-style-type:disc">Git pull</li></ul></details></li></ul><ul id="568a5f4b-bd56-46fb-bc35-043df080047b" class="block-color-purple_background toggle"><li><details open=""><summary>Empurrar alterações para o repositório</summary><hr id="7d09b145-bd10-4a5f-9ee0-3e843efa57af"/><ul id="3cf40cfe-ef84-4322-adcd-4205afddf0c2" class="bulleted-list"><li style="list-style-type:disc">Git push</li></ul></details></li></ul><ul id="80d12f08-9c80-491c-b009-67d2c330f4e4" class="block-color-purple_background toggle"><li><details open=""><summary>Abrir menu de configurações</summary><ul id="4eef8fd6-1915-4d7f-b20f-e64604d5a6dd" class="bulleted-list"><li style="list-style-type:disc">Git config</li></ul></details></li></ul><h2 id="44935d05-24f2-4bf9-a38a-21ddfd6f6d0c" class=""><mark class="highlight-pink">GitHub</mark></h2><p id="adb54b09-5be5-4c44-a6fd-d564dc901fd5" class="">O GitHub, mesmo tendo o nome bem parecido com o Git, possui uma temática um pouco diferente, esse é uma plataforma de hospedagem de código, para controle de versão com Git</p><p id="bdf1d47d-7862-483d-b7f0-dfaeb93e0693" class="">
+</p><h2 id="39698e8b-3c1f-4b44-9db7-19f5d3350ecb" class="block-color-pink">Para mais informações sobre o Git</h2><p id="3016cad0-4914-4b82-a3bc-0818afc0fc95" class="">É sempre bom revisar os documentos de uma tecnologia para aprender e se aprofundar mais sobre ela. no caso do Git, segui abaixo o link para seus documentos , onde será um guia de estudos contínuo , principalmente se tratando de comandos.</p><h3 id="2ab01e21-0384-45d8-9c0e-ffa6d2be5470" class="block-color-purple">Referencias Git</h3><figure id="4c0353c8-1858-4b4e-be67-d5052fff19c7"><a href="https://git-scm.com/docs" class="block-color-purple_background bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Git - Reference</div><div class="bookmark-description">Quick reference guides:
+      GitHub Cheat Sheet
+      |
+      Visual Git Cheat Sheet</div></div><div class="bookmark-href"><img src="https://git-scm.com/favicon.ico" class="icon bookmark-icon"/>https://git-scm.com/docs</div></div></a></figure><h3 id="c604ce10-bd59-421f-939b-70dbd257fe8f" class="block-color-purple">Todos os comandos Git</h3><figure id="d4a88462-2ee1-435e-a91b-05aa2507143c"><a href="https://git-scm.com/docs/git#_git_commands" class="block-color-purple_background bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Git - git Documentation</div><div class="bookmark-description">Check your version of git by running</div></div><div class="bookmark-href"><img src="https://git-scm.com/favicon.ico" class="icon bookmark-icon"/>https://git-scm.com/docs/git#_git_commands</div></div></a></figure><h3 id="92479321-4c0b-4630-981b-e2bf727966d9" class="block-color-purple">Book Git</h3><figure id="171a8010-033d-49ea-ab80-6b934b72fbd0"><a href="https://git-scm.com/book/en/v2" class="block-color-purple_background bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Git - Book</div><div class="bookmark-description">This book is available in
+  English.</div></div><div class="bookmark-href"><img src="https://git-scm.com/favicon.ico" class="icon bookmark-icon"/>https://git-scm.com/book/en/v2</div></div></a></figure><p id="7dcb440a-24a8-498a-9003-e16f4deaca85" class="">
+</p><h2 id="3e3fcdc2-9b84-4478-80b2-67dcd088fd66" class=""><mark class="highlight-pink">Criação de repositório</mark></h2><p id="bcdc8414-5118-411c-bfec-4de656f98ada" class="">Existem duas formas de obter um repositório:</p><ol type="1" id="ac7aa3c7-b35f-4e92-a569-c6a83048dbd8" class="block-color-purple numbered-list" start="1"><li>Transformando um diretório local , uma pasta que não está sob controle de versão.</li></ol><ol type="1" id="b7392d96-dd32-4806-922a-48a9470d04bb" class="block-color-purple numbered-list" start="2"><li>Clonando um repositório existente.</li></ol><p id="27d184f9-c203-4fae-9f7e-31c93d93367e" class="">
+</p><p id="793ee63f-65ba-47ed-b35c-27e00b7f861b" class="">Levando para a prática, temos os seguintes esquemas de passos a serem seguidos;</p><ul id="c7e319be-a4d6-444c-b1ba-2bae263531b3" class="block-color-purple_background toggle"><li><details open=""><summary>Criando do zero.</summary><ul id="1da7b5d1-ee1f-4099-9e64-16260c6d32f9" class="bulleted-list"><li style="list-style-type:disc">Crie uma pasta onde será o ponto de partida.</li></ul><ul id="6a70a964-37b9-4266-b642-965ebb537b1a" class="bulleted-list"><li style="list-style-type:disc">Após criada , acesse o Git Bash dentro dessa pasta.</li></ul><ul id="c5dc73f9-5c2c-497f-b4c4-f5ba04d7e3cf" class="bulleted-list"><li style="list-style-type:disc">utilize os comandos Git init para transformar em um repositório Git.</li></ul></details></li></ul><ul id="6ed6e706-778c-439f-a389-c8f06fc0958d" class="block-color-purple_background toggle"><li><details open=""><summary>Navegar dentro do Git Bash</summary><ul id="a150e8e8-4a41-4560-b524-25400e0d1ef5" class="bulleted-list"><li style="list-style-type:disc">Utilize comandos próprios de um prompt de comando para navegar.</li></ul></details></li></ul><ul id="5f6a023c-c0d7-4c1b-8827-317f80f1a3f1" class="block-color-purple_background toggle"><li><details open=""><summary>Clonar repositório</summary><ul id="f11bc3d1-0d37-4c34-b65a-3ee280829332" class="bulleted-list"><li style="list-style-type:disc">Dentro da pasta que deseja clonar , utilize o comando Git clone e o link do repositório.</li></ul><ul id="60b59b3b-47d0-4956-b8bf-2faaf1b54682" class="bulleted-list"><li style="list-style-type:disc">Não se esqueça de verificar os token para conseguir clonar este.</li></ul></details></li></ul><ul id="917c9fd1-6ac3-48ea-aa8e-6200cc793585" class="block-color-purple_background toggle"><li><details open=""><summary>Clonando apenas uma Branch</summary><ul id="8e8b7a16-3a36-4447-aec4-a8a98b9583ac" class="bulleted-list"><li style="list-style-type:disc">Utilizando o mesmo comando de clonagem,  Git clone URL, inserimos logo em seguida as seguintes informações - - branch feature-1 - - single-branch.</li></ul><ul id="547202a2-e55a-4394-a6a3-416e76ec5a39" class="bulleted-list"><li style="list-style-type:disc">No lugar de feature-1 colocamos o nome da branch que deseja ser clonada.</li></ul><p id="605fa7b1-c635-425b-a3c2-fdd5b754e1ac" class="">
+</p></details></li></ul><p id="133b5ad1-8a2c-478c-93a3-889eb423dbdf" class="">
+</p><h2 id="3231e48c-5788-4511-be10-d878fb94915d" class="block-color-pink">Salvando alterações</h2><p id="e1640ffe-5ab3-4a3c-bedc-e55e97eeb2b5" class="">Após vermos a criação de repositórios, fica evidente que é preciso salvar ele caso tenha alguma alteração nos arquivos.</p><p id="b8107ece-a220-46cb-be70-de854f5e42e8" class="">Para realizar o commit dessas alterações, são necessárias duas etapas bastante tranquilas.</p><ul id="bfece306-fd27-43b3-b286-fecf133d8d59" class="block-color-purple_background toggle"><li><details open=""><summary>Sinalização</summary><p id="f82b9557-6bb4-4ecf-8a09-854b1a5b7b88" class="">Quando desejamos realizar o commit, devemos sinalizar as pastas que iremos realizar esse commit. Através do comando Git add &lt; files &gt; , deixamos separados os diretórios que serão salvos. </p></details></li></ul><ul id="d16ca9c7-a85a-46dd-96d7-4bc13ce28612" class="block-color-purple_background toggle"><li><details open=""><summary>Commit</summary><p id="ea0fc0f9-28e2-4e01-802a-759d61e4bfe0" class="">Após separar, vem a parte tranquila , através do comando Git commit ,   você realiza o commit das pastas selecionadas. A título de curiosidade, também é possível realizar comentários sobre o commit , utilizando -m “comentário” logo após o comando anterior, ficando assim :</p><p id="490d690e-ee21-4278-802c-e6af106c8fb4" class="">Git commit -m ”comentário“.</p></details></li></ul><p id="55923e88-e28e-4211-8d5e-14062e0ac066" class="">
+</p><h2 id="3bf8df59-c659-42f6-b281-627ba3fab93d" class="block-color-pink">Desfazendo alterações</h2><p id="890fd835-0d0c-4f82-8782-edae32622df7" class="">Caso tenha um Git init em uma pasta errada e queira remover, basta realizar o seguinte comando:</p><ul id="3ebd9692-ab58-4704-946a-9cbbddec0345" class="block-color-purple bulleted-list"><li style="list-style-type:disc">rm -rf .git </li></ul><p id="945aa270-6368-43be-be31-ef6beb22ab99" class="">Esse comando irá remover recursivamente ou a força a pasta .git do seu diretório.</p><p id="0f05f5f9-20c2-4935-86b2-84f9c593245c" class="">Porém caso deseje retornar a um commit anterior, desfazendo commits que vieram a ser feitos após, temos três opções de comandos.</p><ul id="579cccda-9318-4a06-be15-87d049d937b7" class="block-color-purple_background toggle"><li><details open=""><summary>Git reset - -soft</summary><p id="9de21a21-ecb4-4aab-91ec-c3ed29cd436d" class="">Quando utilizados, os commits anteriores ao selecionado, são transferidos para a <mark class="highlight-pink">área de preparação</mark>, ou área de sinalização.</p></details></li></ul><ul id="2dbc3ef7-f497-462b-b14c-5200ead74988" class="block-color-purple_background toggle"><li><details open=""><summary>Git reset - -mixed</summary><p id="d9d6ac0b-88cf-4147-b6cc-221eb1a2c190" class="">Já quando utilizamos o mixed , os arquivos não são retornados para a <mark class="highlight-pink">área de sinalização</mark>, e sim para a <mark class="highlight-pink">árvore de commits</mark>, onde terá que ser sinalizado novamente.</p></details></li></ul><ul id="b7d4812f-cf6c-46f0-ae32-d3d8c8c0af58" class="block-color-purple_background toggle"><li><details open=""><summary>Git reset - -hard</summary><p id="7d89ef84-5a15-4298-a867-e08e74723bb9" class="">No caso do hard , os arquivos são<mark class="highlight-pink"> apagados por completo</mark>, não aparecendo tanto na árvore de commit, quando na área de preparação.</p></details></li></ul><p id="69469f47-ef25-4bf2-a6be-8030d3b19250" class="">Para dar continuidade , basta dar um Git log para ver o histórico de commits e copiar o head do commit.</p><p id="f0943e4d-e7b4-4dea-afba-0f79773c0a01" class="">Também é possível utilizar o reset para remover arquivos da área de preparação.</p><hr id="e4c635cf-ba2b-497f-a930-9b15b69ccbc5"/><p id="5c994bea-2ac6-429e-b00a-926320949b46" class="">
+</p><h2 id="faf88bfd-5cb2-4320-a132-55313d4c67bb" class=""><mark class="highlight-pink">Trabalhando com Branches</mark></h2><h3 id="309d7a76-28fc-4929-a923-978a657b6d53" class=""><mark class="highlight-pink">Criando uma nova branch</mark></h3><p id="86e016e4-2c57-4e19-b488-783b351dd465" class="">Para criar uma nova branch, basta usar o seguinte código.</p><ul id="b07fae5c-1a58-42d7-a50d-a076c5b64acd" class="bulleted-list"><li style="list-style-type:disc">Git checkout -b <mark class="highlight-yellow">&lt;Nome da branch&gt;</mark></li></ul><p id="ed9c69c6-676a-49ed-b4c8-350863fd444a" class="">
+</p><h3 id="bd6a949f-1189-4d25-ad88-5f6764159376" class=""><mark class="highlight-pink">Navegando entre branches</mark></h3><p id="ce3f34e2-6ee9-4744-8d4b-4e162885264e" class="">Para navegar chega a ser até mais simples, basta utilizar :</p><ul id="38679a4b-7ddc-453e-ac05-e36bbabb2534" class="bulleted-list"><li style="list-style-type:disc">Git checkout <mark class="highlight-yellow">&lt;Nome da branch que deseja ir&gt;</mark></li></ul><hr id="c031216c-eda1-4e51-b196-efc5c020d7a4"/><p id="e86aa00e-3416-4e0d-90d9-415044bac67b" class="">
+</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="ad207fda-e704-4acf-836c-8e35b2defb06"><div style="font-size:1.5em"><img class="icon" src="https://www.notion.so/icons/help-alternate_purple.svg"/></div><div style="width:100%">A título de curiosidade, o comando Git branch -v lista qual foi o ultimo commit de cada branch.</div></figure><p id="a9107029-265d-432a-8aca-e3346c4f6623" class="">
+</p><h3 id="09a449ed-6e0c-4bc0-a83e-a3262b184f9f" class=""><mark class="highlight-pink">Mesclagem de branches</mark></h3><p id="67f1fd76-441b-47b6-ad19-69a60ce9f84f" class="">Caso todas as alterações estejam corretas em sua branch teste , realizar a mesclagem para que a branch master também possua suas alterações , chega a ser bastante intuitivo, basta acrescentar:</p><ul id="9603a6be-7fe8-4b7f-ae39-c3b4e0ae1b14" class="bulleted-list"><li style="list-style-type:disc">Git merge <mark class="highlight-yellow">&lt;Nome da sua branch secundária&gt;</mark></li></ul><p id="e0d8292c-0004-4a84-8f72-3cdd91a433c2" class="">
+</p><h3 id="f6930848-d7a5-4c9b-a945-2f8af7f28e04" class=""><mark class="highlight-pink">Exclusão de branch</mark></h3><p id="07a172b7-0ce5-40b8-b3f3-5e42a7b0c38f" class="">Caso já tenha sido realizado todos os testes em uma branch secundária , e deseja exclui-la, basta usar o seguinte código:</p><ul id="83cd86ad-842d-4d4d-bc5c-e7a7a916cb4b" class="bulleted-list"><li style="list-style-type:disc">Git branch -d <mark class="highlight-yellow">&lt;Nome da branch que deseja excluir&gt;</mark></li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
